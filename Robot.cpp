@@ -244,21 +244,30 @@ int main()
         //cout << p[i].show_pose() << endl;
     }
 
-    //Now, simulate motion for each particle
-    //Create a new particle set 'p2'
+    //Re-initialize myrobot object and Initialize a measurment vector
+    myrobot = Robot();
+    vector<double> z;
+
+    //Move the robot and sense the environment afterwards
+    myrobot = myrobot.move(0.1, 5.0);
+    z = myrobot.sense();
+
+    // Simulate a robot motion for each of these particles
     Robot p2[n];
-        
-    for (int i = 0; i < n; i++) 
-    {
-        //Rotate each particle by 0.1 and move it forward by 5.0
-				p2[i].move(0.1, 5.0);
-				//Assign 'p2' to 'p' and print the particle poses, each on a single line
+    for (int i = 0; i < n; i++) {
+        p2[i] = p[i].move(0.1, 5.0);
         p[i] = p2[i];
-        cout << p[i].show_pose() << endl;
     }
-    
-    
-        
-    
+
+    double w[n];
+    for (int i = 0; i < n; i++) {
+        //Generate particle weights depending on robot's measurement
+        w[i] = p[i].measurement_prob(p[i].sense());
+        //Print particle weights, each on a single line
+        cout << w[i] << endl;
+    } 
+ 
+ 
+
     return 0;
 }
